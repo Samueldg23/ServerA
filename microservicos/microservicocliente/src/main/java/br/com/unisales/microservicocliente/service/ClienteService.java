@@ -17,7 +17,7 @@ public class ClienteService {
     private ClienteRepository repo;
     private RestTemplate rest;
 
-    private final String loginServiceUrl = "http://localhost:8090";
+    private final String loginServiceUrl = "http://localhost:8080";
 
     public Cliente salvar(Cliente cliente) {
         return repo.save(cliente);

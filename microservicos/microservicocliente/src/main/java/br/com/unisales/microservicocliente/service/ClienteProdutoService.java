@@ -18,7 +18,7 @@ public class ClienteProdutoService {
 
     @Autowired
     private RestTemplate rest;
-    private final String loginServiceUrl = "http://localhost:8090";
+    private final String loginServiceUrl = "http://localhost:8080";
 
     public ClienteProduto cadastrarProdutoCliente(Integer idUsuario, Integer clienteId, Integer produtoId, Date dataAtivacao, Double precoProduto, Double desconto) {
         verificarAdministrador(idUsuario);
