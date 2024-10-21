@@ -1,65 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Conta</title>
-    <link rel="stylesheet" href="/Css/index.css">
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>Microserviços</title>
 </head>
+
 <body>
-    <div class="container">
-        <h2>Criar Nova Conta</h2>
-        <form id="signupForm">
-            <div class="form-group">
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" class="form-control" maxlength="10" required>
-            </div>
-            <div class="form-group">
-                <label for="sexo">Sexo:</label>
-                <select id="sexo" class="form-control" required>
-                    <option value="M">Masculino</option>
-                    <option value="F">Feminino</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="grupo">Grupo:</label>
-                <select id="grupo" class="form-control" required onchange="mostrarCamposCliente()">
-                    <option value="Cliente">Cliente</option>
-                    <option value="Administrador">Administrador</option>
-                </select>
-            </div>
 
-            <div id="clienteCampos" style="display: none;">
-                <h3>Informações adicionais para Cliente</h3>
-                <div class="form-group">
-                    <label for="nascimento">Data de Nascimento:</label>
-                    <input type="date" id="nascimento" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="cpf">CPF:</label>
-                    <input type="text" id="cpf" class="form-control" maxlength="150">
-                </div>
-                <div class="form-group">
-                    <label for="celular">Celular:</label>
-                    <input type="text" id="celular" class="form-control" maxlength="10">
-                </div>
-            </div>
+    <div id="area-cabecalho">
+        <div id="area-logo">
+           <h1>Micro<span class="branco">Serviços</span></h1>
+        </div>
+        <div id="area-menu">
 
-            <button type="button" class="btn" onclick="criarConta()">Criar Conta</button>
-        </form>
-        <div class="login-link">
-            <p>Já tem uma conta? <a href="login.html">Clique aqui para logar</a></p>
+            <a href="index.html">Login</a>
+            <a href="cadrasto.html">Cadrasto</a>
+            <a href="Listagem.html">Listagem</a>
+
         </div>
     </div>
 
-    <script src="/JS/index.js"></script>
+    <div class="wrapper" id="box">
+        <form action="">
+            <h1>Login</h1>
+            <div class="input-box">
+                <input type="text" placeholder="Username"
+                required>
+                <i class='bx bxs-user-circle'></i>
+            </div>
+            <div class="input-box">
+                <input type="password" placeholder="Password"
+                required>
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+            <div class="remember-forgot">
+                <label><input type="checkbox">Relembre-me</label>
+                <a href="">troque a senha</a>
+            </div>
+
+            <button type="submit"class="btn">Login</button>
+            <div class="register-link">
+                <p>Esqueceu sua senha? <a href="cadrasto.html">Cadraste-se</a></p>
+            </div>
+        </form>
+
+         
+    </div>
+
+
+
+
 </body>
+
 </html>
