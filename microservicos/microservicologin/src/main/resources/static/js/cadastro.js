@@ -1,14 +1,12 @@
+// Função para mostrar campos de cliente se o grupo selecionado for "Cliente"
 function mostrarCamposCliente() {
     const grupo = document.getElementById("grupo").value;
     const clienteCampos = document.getElementById("clienteCampos");
 
-    if (grupo === "Cliente") {
-        clienteCampos.style.display = "block"; 
-    } else {
-        clienteCampos.style.display = "none";  
-    }
+    clienteCampos.style.display = grupo === "Cliente" ? "block" : "none";
 }
 
+// Função para cadastrar o usuário e, se necessário, também o cliente
 function criarConta() {
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
@@ -16,17 +14,15 @@ function criarConta() {
     const sexo = document.getElementById("sexo").value;
     const grupo = document.getElementById("grupo").value;
 
-    
     const usuarioData = {
         nome: nome,
         email: email,
         senha: senha,
         sexo: sexo,
         grupo: grupo,
-        ativo: 1 
+        ativo: 1
     };
 
-    
     fetch("http://localhost:8080/salvarUsuario", {
         method: "POST",
         headers: {
@@ -37,8 +33,8 @@ function criarConta() {
     .then(response => response.json())
     .then(usuario => {
         if (grupo === "Cliente") {
-            // Se o grupo for Cliente, também cria o registro de cliente
-            criarCliente(usuario.id); 
+            // Se o grupo for Cliente, cria o registro de cliente
+            criarCliente(usuario.id);
         } else {
             alert("Conta criada com sucesso!");
             window.location.href = "login.html";
@@ -50,11 +46,11 @@ function criarConta() {
     });
 }
 
+// Função para criar cliente com campos adicionais
 function criarCliente(idUsuario) {
     const nascimento = document.getElementById("nascimento").value;
     const cpf = document.getElementById("cpf").value;
     const celular = document.getElementById("celular").value;
-
 
     const clienteData = {
         nascimento: nascimento,
@@ -63,7 +59,6 @@ function criarCliente(idUsuario) {
         idUsuario: idUsuario
     };
 
-    
     fetch("http://localhost:8085/salvarCliente", {
         method: "POST",
         headers: {
@@ -74,7 +69,7 @@ function criarCliente(idUsuario) {
     .then(response => response.json())
     .then(() => {
         alert("Conta de cliente criada com sucesso!");
-        window.location.href = "login.html"; // criar a tela de home para redirecionar para ela
+        window.location.href = "login.html"; // redireciona para a tela de login
     })
     .catch(error => {
         console.error("Erro:", error);

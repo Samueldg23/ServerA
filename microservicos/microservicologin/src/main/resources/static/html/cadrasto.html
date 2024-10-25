@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Conta</title>
-    <link rel="stylesheet" href="/Css/index.css">
+    <link rel="stylesheet" href="../Css/cadastro.css">
 </head>
 <body>
     <div class="container">
         <h2>Criar Nova Conta</h2>
         <form id="signupForm">
+            <!-- Campos de Usuário Comuns -->
             <div class="form-group">
                 <label for="nome">Nome:</label>
                 <input type="text" id="nome" class="form-control" required>
@@ -37,6 +38,7 @@
                 </select>
             </div>
 
+            <!-- Campos Adicionais para Cliente -->
             <div id="clienteCampos" style="display: none;">
                 <h3>Informações adicionais para Cliente</h3>
                 <div class="form-group">
@@ -53,6 +55,7 @@
                 </div>
             </div>
 
+            <!-- Botão de Cadastro -->
             <button type="button" class="btn" onclick="criarConta()">Criar Conta</button>
         </form>
         <div class="login-link">
@@ -60,6 +63,6 @@
         </div>
     </div>
 
-    <script src="/JS/index.js"></script>
+    <script src="/JS/cadastro.js"></script>
 </body>
 </html>
