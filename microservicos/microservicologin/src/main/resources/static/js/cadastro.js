@@ -1,4 +1,3 @@
-// Função para mostrar campos de cliente se o grupo selecionado for "Cliente"
 function mostrarCamposCliente() {
     const grupo = document.getElementById("grupo").value;
     const clienteCampos = document.getElementById("clienteCampos");
@@ -6,7 +5,6 @@ function mostrarCamposCliente() {
     clienteCampos.style.display = grupo === "Cliente" ? "block" : "none";
 }
 
-// Função para cadastrar o usuário e, se necessário, também o cliente
 function criarConta() {
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
@@ -23,7 +21,7 @@ function criarConta() {
         ativo: 1
     };
 
-    fetch("http://localhost:8080/salvarUsuario", {
+    fetch("http://localhost:8080/usuarios/salvarUsuario", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -37,7 +35,7 @@ function criarConta() {
             criarCliente(usuario.id);
         } else {
             alert("Conta criada com sucesso!");
-            window.location.href = "login.html";
+            window.location.href = "/login.html";
         }
     })
     .catch(error => {
@@ -46,7 +44,6 @@ function criarConta() {
     });
 }
 
-// Função para criar cliente com campos adicionais
 function criarCliente(idUsuario) {
     const nascimento = document.getElementById("nascimento").value;
     const cpf = document.getElementById("cpf").value;
@@ -59,7 +56,7 @@ function criarCliente(idUsuario) {
         idUsuario: idUsuario
     };
 
-    fetch("http://localhost:8085/salvarCliente", {
+    fetch("http://localhost:8085/clientes/cadastrar", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -69,7 +66,7 @@ function criarCliente(idUsuario) {
     .then(response => response.json())
     .then(() => {
         alert("Conta de cliente criada com sucesso!");
-        window.location.href = "login.html"; // redireciona para a tela de login
+        window.location.href = "/";
     })
     .catch(error => {
         console.error("Erro:", error);

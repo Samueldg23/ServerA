@@ -25,7 +25,7 @@ public class Cliente {
     private Integer id;
     @Column(name = "nascimento", nullable = false, length = 10)
     private Date nascimento;
-    @Column(name = "cpf", nullable = false, length = 150)
+    @Column(name = "cpf", nullable = false, length = 12)
     private String cpf;
     @Column(name = "celular", nullable = false, length = 10)
     private String celular;

@@ -7,8 +7,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     @GetMapping("/")
-    public String criarConta() {
-        return "/HTML/index.html";  
+    public String index() {
+        return "html/index.html";  
+    }
+
+    @GetMapping("/cadastro")
+    public String cadastro() {
+        return "html/cadastro.html";  
+    }
+
+    @GetMapping("/listagem")
+    public String listagem() {
+        return "html/listagem.html";  
     }
 }
-
