@@ -17,7 +17,6 @@ import br.com.unisales.microservicocliente.service.ClienteProdutoService;
 import br.com.unisales.microservicocliente.table.ClienteProduto;
 
 
-
 @RestController
 @RequestMapping("/cliente-produto")
 public class ClienteProdutoController {
@@ -26,7 +25,7 @@ public class ClienteProdutoController {
     private ClienteProdutoService service;
 
     @PostMapping("/associar")
-    public ResponseEntity<ClienteProduto> associarProdutoCliente(
+    public ResponseEntity<?> associarProdutoCliente(
         @RequestParam("idUsuario") Integer idUsuario,
         @RequestParam("clienteId") Integer clienteId, 
         @RequestParam("produtoId") Integer produtoId,
@@ -34,19 +33,27 @@ public class ClienteProdutoController {
         @RequestParam("precoProduto") Double precoProduto,
         @RequestParam(value = "desconto", required = false) Double desconto) {
         
-        ClienteProduto cadastro = service.cadastrarProdutoCliente(
-            idUsuario, clienteId, produtoId, dataAtivacao, precoProduto, desconto);
-        return ResponseEntity.ok(cadastro);
+        try {
+            ClienteProduto cadastro = service.cadastrarProdutoCliente(
+                idUsuario, clienteId, produtoId, dataAtivacao, precoProduto, desconto);
+            return ResponseEntity.ok(cadastro);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/desassociar")
-    public ResponseEntity<Void> desassociarProdutoCliente(
+    public ResponseEntity<?> desassociarProdutoCliente(
         @RequestParam("idUsuario") Integer idUsuario, 
         @RequestParam("clienteId") Integer clienteId,
         @RequestParam("produtoId") Integer produtoId) {
 
-        service.desativarProdutoCliente(idUsuario, clienteId, produtoId);
-        return ResponseEntity.noContent().build();
+        try {
+            service.desativarProdutoCliente(idUsuario, clienteId, produtoId);
+            return ResponseEntity.noContent().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        }
     }
 
     @GetMapping("/listar/{clienteId}")

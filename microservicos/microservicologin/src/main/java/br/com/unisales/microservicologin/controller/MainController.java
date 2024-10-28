@@ -20,4 +20,14 @@ public class MainController {
     public String listagem() {
         return "html/listagem.html";  
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "html/login.html";  
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "html/admin.html";  
+    }
 }

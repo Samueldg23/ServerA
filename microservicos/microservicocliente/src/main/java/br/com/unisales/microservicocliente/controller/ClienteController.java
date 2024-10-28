@@ -25,16 +25,14 @@ public class ClienteController {
     @Autowired
     private ClienteService service;
 
-    // Cadastrar um novo cliente
     @PostMapping("/cadastrar")
     public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente) {
-        Cliente clienteSalvo = service.salvar(cliente);
+        Cliente clienteSalvo = service.salvarCliente(cliente);
         return ResponseEntity.ok(clienteSalvo);
     }
 
-    // Atualizar um cliente existente
     @PostMapping("/atualizar/{id}")
-    public ResponseEntity<Cliente> atualizarCliente(
+    public ResponseEntity<?> atualizarCliente(
             @PathVariable Integer id,
             @RequestBody Cliente cliente,
             @RequestBody UsuarioDTO usuarioDto) {
@@ -43,29 +41,30 @@ public class ClienteController {
         if (clienteAtualizado != null) {
             return ResponseEntity.ok(clienteAtualizado);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body("Cliente não encontrado.");
         }
     }
 
-    // Deletar um cliente pelo ID
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable Integer id) {
-        service.deletar(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deletarCliente(@PathVariable Integer id) {
+        try {
+            service.deletar(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body("Erro ao deletar cliente: " + e.getMessage());
+        }
     }
 
-    // Buscar um cliente pelo ID
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Integer id) {
+    public ResponseEntity<?> buscarClientePorId(@PathVariable Integer id) {
         Cliente cliente = service.buscarPorId(id);
         if (cliente != null) {
             return ResponseEntity.ok(cliente);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body("Cliente não encontrado.");
         }
     }
 
-    // Listar todos os clientes
     @GetMapping("/listar")
     public ResponseEntity<List<Cliente>> listarClientes() {
         List<Cliente> clientes = service.listar();

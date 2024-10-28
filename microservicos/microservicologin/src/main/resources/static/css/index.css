@@ -29,21 +29,6 @@ body {
     margin: 0;
 }
 
-#area-menu {
-    margin-top: 10px;
-}
-
-#area-menu a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-    font-weight: bold;
-}
-
-#area-menu a:hover {
-    text-decoration: underline;
-}
-
 .wrapper {
     background-color: white;
     padding: 20px;

@@ -1,8 +1,11 @@
 package br.com.unisales.microservicologin.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,9 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import br.com.unisales.microservicologin.model.UsuarioDetalhadoDto;
 import br.com.unisales.microservicologin.model.UsuarioDto;
+import br.com.unisales.microservicologin.model.UsuarioLoginDto;
 import br.com.unisales.microservicologin.repository.UsuarioRepository;
 import br.com.unisales.microservicologin.service.UsuarioService;
 import br.com.unisales.microservicologin.table.Usuario;
@@ -22,89 +26,19 @@ import br.com.unisales.microservicologin.table.Usuario;
 @Controller
 @RequestMapping("/usuarios")
 public class UsuarioController {
+
     @Autowired
     private UsuarioService service;
 
     @Autowired
     private UsuarioRepository repo;
 
-    /*
-     * @PostMapping("/salvarUsuario")
-     * public ResponseEntity<Integer> salvarUsuario(
-     * 
-     * @RequestParam("nome") String nome,
-     * 
-     * @RequestParam("sexo") String sexo,
-     * 
-     * @RequestParam("email") String email,
-     * 
-     * @RequestParam("senha") String senha,
-     * 
-     * @RequestParam("grupo") String grupo,
-     * 
-     * @RequestParam("ativo") Integer ativo) {
-     * 
-     * // Cria o novo usuário com os parâmetros recebidos
-     * Usuario usuarioNovo = new Usuario(null, nome, sexo, email, senha, grupo,
-     * ativo);
-     * this.servico.salvar(usuarioNovo);
-     * return ResponseEntity.ok(usuarioNovo.getId());
-     * }
-     */
-    /*
-     * @PostMapping("/salvarUsuario")
-     * public ResponseEntity<Integer> salvarUsuario(
-     * 
-     * @RequestParam("nome") String nome,
-     * 
-     * @RequestParam("sexo") String sexo,
-     * 
-     * @RequestParam("email") String email,
-     * 
-     * @RequestParam("senha") String senha,
-     * 
-     * @RequestParam("grupo") String grupo,
-     * 
-     * @RequestParam("ativo") Integer ativo) {
-     * 
-     * // Cria o novo usuário com os parâmetros recebidos
-     * Usuario usuario = new Usuario(null, nome, sexo, email, senha, grupo, ativo);
-     * 
-     * // Salva o usuário no banco de dados e captura o objeto salvo
-     * Usuario usuarioSalvo = service.salvar(usuario);
-     * 
-     * // Retorna o ID do usuário salvo
-     * return ResponseEntity.ok(usuarioSalvo.getId());
-     * }
-     */
     @PostMapping("/salvarUsuario")
     public ResponseEntity<Integer> salvarUsuario(@RequestBody Usuario usuario) {
         Usuario usuarioSalvo = service.salvar(usuario);
         return ResponseEntity.ok(usuarioSalvo.getId());
     }
 
-    /*
-     * @PostMapping("/atualizarUsuario")
-     * public void atualizarUsuario(
-     * 
-     * @RequestParam("id") Integer id,
-     * 
-     * @RequestParam("nome") String nome,
-     * 
-     * @RequestParam("sexo") String sexo,
-     * 
-     * @RequestParam("email") String email,
-     * 
-     * @RequestParam("senha") String senha,
-     * 
-     * @RequestParam("grupo") String grupo,
-     * 
-     * @RequestParam("ativo") Integer ativo) {
-     * 
-     * Usuario usuario = new Usuario(id, nome, sexo, email, senha, grupo, ativo);
-     * this.servico.alterar(id, usuario);
-     * }
-     */
     @PutMapping("/atualizarUsuario/{id}")
     public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDto usuarioDto) {
         var user = repo.findById(id);
@@ -121,17 +55,20 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/deletarUsuario")
-    public void deletarUsuario(@RequestParam("id") Integer id) {
-        this.service.deletar(id);
+    @DeleteMapping("/deletarUsuario/{id}")
+    public ResponseEntity<?> deletarUsuario(@PathVariable Integer id) {
+        try {
+            service.deletar(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body("Usuário não encontrado.");
+        }
     }
 
-    @GetMapping("/listarUsuarios")
-    public List<Usuario> listarUsuarios(
-            @RequestParam("id") Integer id,
-            @RequestParam("grupo") String grupo) {
-
-        return this.service.listar(id, grupo);
+    @GetMapping("/listarUsuariosDetalhados")
+    public ResponseEntity<List<UsuarioDetalhadoDto>> listarUsuariosDetalhados() {
+        List<UsuarioDetalhadoDto> usuariosDetalhados = service.listarUsuariosDetalhados();
+        return ResponseEntity.ok(usuariosDetalhados);
     }
 
     @GetMapping("/buscarUsuario/{id}")
@@ -148,9 +85,19 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/criar-conta")
-    public String criarConta() {
-        return "HTML/index";
-    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UsuarioLoginDto loginDto) {
+        Usuario usuario = service.autenticar(loginDto.getEmail(), loginDto.getSenha());
 
+        if (usuario != null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", usuario.getId());
+            response.put("email", usuario.getEmail());
+            response.put("grupo", usuario.getGrupo());
+
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou senha inválidos");
+        }
+    }
 }
