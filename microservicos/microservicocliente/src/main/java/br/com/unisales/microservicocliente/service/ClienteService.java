@@ -20,14 +20,14 @@ public class ClienteService {
     private ClienteRepository repo;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private RestTemplate rest;
 
-    private final String loginServiceUrl = "http://localhost:8080"; // URL do serviço de login
+    private final String loginServiceUrl = "http://localhost:8080";
 
     // Método para salvar o cliente verificando se o usuário existe no serviço de login
     public Cliente salvarCliente(Cliente cliente) {
         String url = loginServiceUrl + "/usuarios/" + cliente.getIdUsuario();
-        ResponseEntity<UsuarioDTO> response = restTemplate.getForEntity(url, UsuarioDTO.class);
+        ResponseEntity<UsuarioDTO> response = rest.getForEntity(url, UsuarioDTO.class);
 
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             // Usuário existe, então prossegue para salvar o cliente
@@ -52,7 +52,11 @@ public class ClienteService {
         }
         return null;
     }
-
+/* Cria uma variável client pegando pelo o id
+ * se o client estiver presente cria uma instância do Cliente com todos os get do client
+ * antes de deletar o cliente usa um método de deletar o usuário no login
+ * depois deleta o cliente
+ */
     public void deletar(Integer id) {
         var client = repo.findById(id);
         if (client.isPresent()) {
@@ -72,10 +76,10 @@ public class ClienteService {
     }
 
     private void atualizarLogin(Integer idUsuario, UsuarioDTO usuarioDto) {
-        restTemplate.put(loginServiceUrl + "/atualizarUsuario/" + idUsuario, usuarioDto);
+        rest.put(loginServiceUrl + "/atualizarUsuario/" + idUsuario, usuarioDto);
     }
 
     private void deletarLogin(Integer idUsuario) {
-        restTemplate.delete(loginServiceUrl + "/deletarUsuario/" + idUsuario);
+        rest.delete(loginServiceUrl + "/deletarUsuario/" + idUsuario);
     }
 }

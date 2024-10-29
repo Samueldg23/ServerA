@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.unisales.microservicoproduto.repository.ProdutoRepository;
 import br.com.unisales.microservicoproduto.table.Produto;
-
+/*Serviço do produto*/
 @Service
 public class ProdutoService {
     @Autowired
@@ -16,6 +16,10 @@ public class ProdutoService {
     public void salvar(Produto produto) {
         this.repo.save(produto);
     }
+/*Cria uma variável (prod) pegando o id do produto que for passado
+ * verifica se ele tá presente e depois cria uma instância um produto pegando todos os campos do produto
+ * da um set nos campos da instância do produto
+ */
     public Produto atualizar(Integer Id, Produto produto) {
         var prod = repo.findById(Id);
         if (prod.isPresent()) {

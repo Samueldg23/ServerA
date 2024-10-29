@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.unisales.microservicologin.model.ClienteDto;
@@ -78,7 +79,7 @@ public class UsuarioService {
         try {
             String url = "localhost:8085/clientes/buscar/" + usuarioId;
             return restTemplate.getForObject(url, ClienteDto.class);
-        } catch (Exception e) {
+        } catch (RestClientException e) {
             return null;
         }
     }

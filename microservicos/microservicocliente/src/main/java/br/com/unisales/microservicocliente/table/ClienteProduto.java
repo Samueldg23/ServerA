@@ -36,14 +36,14 @@ public class ClienteProduto {
     private Date dataAtivacao;
 
     @Column(name = "dataInativacao")
-    private Date dataInativacao;  // Pode ser null caso o produto esteja ativo
+    private Date dataInativacao;
 
     @Column(name = "precoProduto", nullable = false)
     private Double precoProduto;
 
     @Column(name = "desconto")
-    private Double desconto;  // Pode ser null se não houver desconto
+    private Double desconto; 
 
     @Column(name = "ativo")
-    private Integer ativo;  // 0 - inativo, 1 - ativo
+    private Integer ativo;  
 }
