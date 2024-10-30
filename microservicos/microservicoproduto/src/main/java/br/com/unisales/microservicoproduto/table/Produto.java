@@ -23,7 +23,7 @@ public class Produto {
     private Integer id;
     @Column(name = "titulo", nullable = false, length = 150)
     private String titulo;
-    @Column(name = "descricao", nullable = false, length = 500)
+    @Column(name = "descricao", nullable = false, length = 700)
     private String descricao;
     @Column(name = "ativo", nullable = false, length = 1)
     private Integer ativo;

@@ -35,7 +35,7 @@ function criarConta() {
             criarCliente(usuario.id);
         } else {
             alert("Conta criada com sucesso!");
-            window.location.href = "/login.html";
+            window.location.href = "/";
         }
     })
     .catch(error => {

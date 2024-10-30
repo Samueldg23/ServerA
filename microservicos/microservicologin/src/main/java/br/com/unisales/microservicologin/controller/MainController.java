@@ -16,11 +16,6 @@ public class MainController {
         return "html/cadastro.html";  
     }
 
-    @GetMapping("/listagem")
-    public String listagem() {
-        return "html/listagem.html";  
-    }
-
     @GetMapping("/login")
     public String login() {
         return "html/login.html";  
@@ -29,5 +24,10 @@ public class MainController {
     @GetMapping("/admin")
     public String admin() {
         return "html/admin.html";  
+    }
+
+    @GetMapping("/cliente")
+    public String cliente() {
+        return "html/cliente.html";  
     }
 }

@@ -1,4 +1,4 @@
-/* Estilos básicos preservados */
+/* Estilos básicos */
 * {
     box-sizing: border-box;
 }
@@ -75,16 +75,12 @@ form label {
     display: block;
 }
 
-form input, form textarea, form button {
+form input {
     width: 100%;
     padding: 10px;
     margin: 8px 0;
     border: 1px solid #ddd;
     border-radius: 4px;
-}
-
-form textarea {
-    resize: vertical;
 }
 
 button {
@@ -100,12 +96,6 @@ button {
 
 button:hover {
     background-color: #0056b3;
-}
-
-.success-message {
-    color: green;
-    font-weight: bold;
-    margin: 10px 0;
 }
 
 /* Estilo da tabela */
@@ -130,19 +120,63 @@ table td {
     background-color: #f3f3f3;
 }
 
-/* Ícones de ações */
-.action-icon {
-    cursor: pointer;
-    margin: 0 5px;
-    color: #007bff;
-    font-size: 18px;
-}
-
-.action-icon:hover {
-    color: #0056b3;
-}
-
 /* Estilos específicos para campos ocultos */
 .hidden {
     display: none;
+}
+
+/* Estilos para o formulário do perfil */
+#perfil-form table {
+    width: 100%;
+}
+
+#perfil-form table th,
+#perfil-form table td {
+    padding: 10px;
+    vertical-align: middle;
+}
+
+#perfil-form table th {
+    width: 30%;
+    background-color: #007bff;
+    color: white;
+    text-align: left;
+    border-radius: 4px 0 0 4px;
+}
+
+#perfil-form table td {
+    width: 70%;
+}
+
+#perfil-form input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 15px;
+}
+
+/* Estilo da tabela de produtos associados */
+.associated-products {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.associated-products th, .associated-products td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.associated-products th {
+    background-color: #007bff;
+    color: white;
+}
+
+.associated-products td {
+    background-color: #f3f3f3;
 }
