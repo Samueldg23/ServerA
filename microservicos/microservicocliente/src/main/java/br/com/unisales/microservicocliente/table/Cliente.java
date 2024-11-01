@@ -34,6 +34,6 @@ public class Cliente {
     ficar no microserviço de login então tem que ver como encontrar o id do usuário correto para chamar
     as suas informações e os métodos que ele poderá fazer que estão nesse serviço
     */ 
-    @Column(name = "idUsuario", nullable = false)
+    @Column(name = "id_usuario", nullable = false)
     private Integer idUsuario;
 }

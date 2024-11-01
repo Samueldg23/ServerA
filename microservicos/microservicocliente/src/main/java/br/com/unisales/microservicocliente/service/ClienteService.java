@@ -78,7 +78,7 @@ public class ClienteService {
     private void atualizarLogin(Integer idUsuario, UsuarioDTO usuarioDto) {
         rest.put(loginServiceUrl + "/atualizarUsuario/" + idUsuario, usuarioDto);
     }
-
+// mapping 
     private void deletarLogin(Integer idUsuario) {
         rest.delete(loginServiceUrl + "/deletarUsuario/" + idUsuario);
     }

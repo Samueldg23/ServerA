@@ -30,9 +30,10 @@ function criarConta() {
     })
     .then(response => response.json())
     .then(usuario => {
+        console.log('usuario: ',usuario);
         if (grupo === "Cliente") {
             // Se o grupo for Cliente, cria o registro de cliente
-            criarCliente(usuario.id);
+            criarCliente(1);
         } else {
             alert("Conta criada com sucesso!");
             window.location.href = "/";
@@ -55,6 +56,8 @@ function criarCliente(idUsuario) {
         celular: celular,
         idUsuario: idUsuario
     };
+
+    console.log(clienteData);
 
     fetch("http://localhost:8085/clientes/cadastrar", {
         method: "POST",

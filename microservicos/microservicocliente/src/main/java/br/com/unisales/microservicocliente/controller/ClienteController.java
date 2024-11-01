@@ -27,6 +27,7 @@ public class ClienteController {
 
     @PostMapping("/cadastrar")
     public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente) {
+        
         Cliente clienteSalvo = service.salvarCliente(cliente);
         return ResponseEntity.ok(clienteSalvo);
     }

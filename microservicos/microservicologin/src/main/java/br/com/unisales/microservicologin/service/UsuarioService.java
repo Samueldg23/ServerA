@@ -19,7 +19,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository repo;
     @Autowired
-    private RestTemplate restTemplate; 
+    private RestTemplate rest; 
 
     public Usuario salvar(Usuario usuario) {
         return repo.save(usuario);
@@ -78,18 +78,17 @@ public class UsuarioService {
     private ClienteDto buscarDadosCliente(Integer usuarioId) {
         try {
             String url = "localhost:8085/clientes/buscar/" + usuarioId;
-            return restTemplate.getForObject(url, ClienteDto.class);
+            return rest.getForObject(url, ClienteDto.class);
         } catch (RestClientException e) {
             return null;
         }
     }
 
     public Usuario autenticar(String email, String senha) {
-        // Busca o usuário pelo email
         Usuario usuario = repo.findByEmail(email);
         if (usuario != null && usuario.getSenha().equals(senha)) {
-            return usuario; // Retorna o usuário se a senha estiver correta
+            return usuario;
         }
-        return null; // Retorna null se o usuário não existir ou a senha estiver incorreta
+        return null; 
     }
 }
