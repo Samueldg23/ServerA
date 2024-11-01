@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,10 +35,17 @@ public class UsuarioController {
     private UsuarioRepository repo;
 
     @PostMapping("/salvarUsuario")
-    public ResponseEntity<Integer> salvarUsuario(@RequestBody Usuario usuario) {
+public ResponseEntity<Usuario> salvarUsuario(@RequestBody Usuario usuario) {
+    try {
         Usuario usuarioSalvo = service.salvar(usuario);
-        return ResponseEntity.ok(usuarioSalvo.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
+    } catch (DataIntegrityViolationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
+}
+
 
     @PutMapping("/atualizarUsuario/{id}")
     public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDto usuarioDto) {

@@ -3,6 +3,7 @@ package br.com.unisales.microservicocliente.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,10 +27,13 @@ public class ClienteController {
     private ClienteService service;
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente) {
-        
-        Cliente clienteSalvo = service.salvarCliente(cliente);
-        return ResponseEntity.ok(clienteSalvo);
+    public ResponseEntity<?> cadastrarCliente(@RequestBody Cliente cliente) {
+        try {
+            Cliente clienteSalvo = service.salvarCliente(cliente);
+            return ResponseEntity.ok(clienteSalvo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping("/atualizar/{id}")
