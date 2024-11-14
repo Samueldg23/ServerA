@@ -146,3 +146,39 @@ table td {
 .hidden {
     display: none;
 }
+
+/* Estilo para o toggle button */
+.toggle-ativo {
+    position: absolute;
+    opacity: 0;
+}
+
+.toggle-ativo + label {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: 0.4s;
+}
+
+.toggle-ativo:checked + label {
+    background-color: #4CAF50;
+}
+
+.toggle-ativo + label:before {
+    content: "";
+    position: absolute;
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+.toggle-ativo:checked + label:before {
+    transform: translateX(26px);
+}

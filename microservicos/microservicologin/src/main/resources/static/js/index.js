@@ -1,32 +1,36 @@
-document.getElementById('loginForm').addEventListener('submit', function(event) {
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
 
-    fetch('http://localhost:8080/usuarios/login', { 
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: email, senha: senha })
-    })
-    .then(response => {
+    try {
+        const response = await fetch('http://localhost:8080/usuarios/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, senha })
+        });
+
         if (response.ok) {
-            return response.json(); 
+            const data = await response.json();
+            // Salva as informações no localStorage
+            localStorage.setItem('usuarioId', data.id);
+            localStorage.setItem('usuarioEmail', data.email);
+            localStorage.setItem('usuarioGrupo', data.grupo);
+
+            // Redireciona com base no grupo
+            if (data.grupo === 'Administrador') {
+                window.location.href = '/admin';
+            } else {
+                window.location.href = '/cliente';
+            }
         } else {
             throw new Error('Email ou senha inválidos');
         }
-    })
-    .then(data => {
-        if (data.grupo === 'Administrador') {
-            window.location.href = '/admin';
-        } else {
-            window.location.href = '/cliente';
-        }
-    })
-    .catch(error => {
+    } catch (error) {
         alert('Falha no login: ' + error.message);
         console.error('Erro ao realizar login:', error);
-    });
+    }
 });

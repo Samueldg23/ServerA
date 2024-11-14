@@ -1,4 +1,4 @@
-package br.com.unisales.microservicologin.model;
+package br.com.unisales.microservicocliente.model;
 
 import java.util.Date;
 import java.util.List;

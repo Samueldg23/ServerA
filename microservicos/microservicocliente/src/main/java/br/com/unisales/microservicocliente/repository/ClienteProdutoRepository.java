@@ -9,4 +9,7 @@ import br.com.unisales.microservicocliente.table.ClienteProduto;
 public interface ClienteProdutoRepository extends JpaRepository<ClienteProduto, Integer> {
 
     List<ClienteProduto> findByClienteId(Integer clienteId);
+
+    List<ClienteProduto> findByClienteIdAndProdutoIdAndAtivo(Integer clienteId, Integer produtoId, Integer ativo);
+
 }

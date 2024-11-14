@@ -1,6 +1,7 @@
 package br.com.unisales.microservicologin.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository repo;
     @Autowired
-    private RestTemplate rest; 
+    private RestTemplate rest;
 
     public Usuario salvar(Usuario usuario) {
         return repo.save(usuario);
@@ -29,24 +30,19 @@ public class UsuarioService {
         return repo.findById(id).orElse(null);
     }
 
-    public void alterar(Integer id, Usuario usuario) {
-        var user = repo.findById(id);
-        if (user.isPresent()) {
-            Usuario usuarioAtual = user.get();
+    public void alterar(Integer id, Usuario usuarioAtualizado) {
+        Optional<Usuario> optionalUsuario = repo.findById(id);
 
-            if (usuarioAtual.getGrupo().equalsIgnoreCase("Administrador")) {
-                usuarioAtual.setNome(usuario.getNome());
-                usuarioAtual.setSexo(usuario.getSexo());
-                usuarioAtual.setEmail(usuario.getEmail());
-                usuarioAtual.setSenha(usuario.getSenha());
-                usuarioAtual.setGrupo(usuario.getGrupo());
-                usuarioAtual.setAtivo(usuario.getAtivo());
-            } else {
-                usuarioAtual.setNome(usuario.getNome());
-                usuarioAtual.setEmail(usuario.getEmail());
-                usuarioAtual.setAtivo(usuario.getAtivo());
-            }
-            repo.save(usuarioAtual);
+        if (optionalUsuario.isPresent()) {
+            Usuario usuario = optionalUsuario.get();
+
+            // Atualizar apenas os campos permitidos
+            usuario.setNome(usuarioAtualizado.getNome());
+            usuario.setEmail(usuarioAtualizado.getEmail());
+            usuario.setSenha(usuarioAtualizado.getSenha());
+            usuario.setAtivo(usuarioAtualizado.getAtivo());
+
+            repo.save(usuario);
         }
     }
 
@@ -67,6 +63,7 @@ public class UsuarioService {
             ClienteDto cliente = buscarDadosCliente(usuario.getId());
 
             if (cliente != null) {
+                dto.setIdCliente(cliente.getId());
                 dto.setDataNascimento(cliente.getDataNascimento());
                 dto.setTelefone(cliente.getTelefone());
                 dto.setProdutos(cliente.getProdutos());
@@ -77,7 +74,7 @@ public class UsuarioService {
 
     private ClienteDto buscarDadosCliente(Integer usuarioId) {
         try {
-            String url = "localhost:8085/clientes/buscar/" + usuarioId;
+            String url = "http://localhost:8085/clientes/detalhes/usuario/" + usuarioId;
             return rest.getForObject(url, ClienteDto.class);
         } catch (RestClientException e) {
             return null;
@@ -89,6 +86,6 @@ public class UsuarioService {
         if (usuario != null && usuario.getSenha().equals(senha)) {
             return usuario;
         }
-        return null; 
+        return null;
     }
 }

@@ -38,12 +38,6 @@ public class ClienteProduto {
     @Column(name = "dataInativacao")
     private Date dataInativacao;
 
-    @Column(name = "precoProduto", nullable = false)
-    private Double precoProduto;
-
-    @Column(name = "desconto")
-    private Double desconto; 
-
     @Column(name = "ativo")
     private Integer ativo;  
 }

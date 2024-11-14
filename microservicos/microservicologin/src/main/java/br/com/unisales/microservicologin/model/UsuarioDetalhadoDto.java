@@ -1,5 +1,6 @@
 package br.com.unisales.microservicologin.model;
 
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +15,8 @@ public class UsuarioDetalhadoDto {
     private String email;
     private String grupo;
     private Integer ativo;
-    private String dataNascimento; 
+    private Integer idCliente;
+    private Date dataNascimento; 
     private String telefone;
     private List<String> produtos;
 }

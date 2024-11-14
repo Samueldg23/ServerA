@@ -1,16 +1,20 @@
 package br.com.unisales.microservicocliente.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.unisales.microservicocliente.model.ClienteDto;
 import br.com.unisales.microservicocliente.model.UsuarioDTO;
 import br.com.unisales.microservicocliente.repository.ClienteRepository;
 import br.com.unisales.microservicocliente.table.Cliente;
+import br.com.unisales.microservicocliente.table.ClienteProduto;
 
 @Service
 public class ClienteService {
@@ -19,31 +23,28 @@ public class ClienteService {
     private ClienteRepository repo;
 
     @Autowired
+    private ClienteProdutoService clienteProdutoService;
+
+    @Autowired
     private RestTemplate rest;
 
     private final String loginServiceUrl = "http://localhost:8080";
 
-    // Método para salvar o cliente verificando se o usuário existe no serviço de
-    // login
     public Cliente salvarCliente(Cliente cliente) {
         try {
             String url = loginServiceUrl + "/usuarios/buscarUsuario/" + cliente.getIdUsuario();
             ResponseEntity<UsuarioDTO> response = rest.getForEntity(url, UsuarioDTO.class);
-    
+
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                System.out.println("Cliente recebido: " + cliente);
                 Cliente clienteSalvo = repo.save(cliente);
-                System.out.println("Cliente salvo no banco: " + clienteSalvo);
                 return clienteSalvo;
             } else {
                 throw new IllegalArgumentException("Usuário não encontrado!");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IllegalArgumentException | RestClientException e) {
             throw new RuntimeException("Erro ao salvar cliente: " + e.getMessage());
         }
     }
-    
 
     public Cliente atualizar(Integer id, Cliente cliente, UsuarioDTO usuarioDto) {
         var clienteAtual = repo.findById(id);
@@ -52,27 +53,16 @@ public class ClienteService {
             clienteNovo.setNascimento(cliente.getNascimento());
             clienteNovo.setCpf(cliente.getCpf());
             clienteNovo.setCelular(cliente.getCelular());
-
-            // Atualizando o login do cliente
             atualizarLogin(clienteNovo.getIdUsuario(), usuarioDto);
-
             return repo.save(clienteNovo);
         }
         return null;
     }
 
-    /*
-     * Cria uma variável client pegando pelo o id
-     * se o client estiver presente cria uma instância do Cliente com todos os get
-     * do client
-     * antes de deletar o cliente usa um método de deletar o usuário no login
-     * depois deleta o cliente
-     */
     public void deletar(Integer id) {
         var client = repo.findById(id);
         if (client.isPresent()) {
             Cliente cliente = client.get();
-            // Deleta o usuário no login service antes de deletar o cliente
             deletarLogin(cliente.getIdUsuario());
             repo.deleteById(id);
         }
@@ -86,11 +76,39 @@ public class ClienteService {
         return repo.findAll();
     }
 
+    public ClienteDto buscarDetalhesPorIdUsuario(Integer idUsuario) {
+        Cliente cliente = repo.findByIdUsuario(idUsuario).orElse(null);
+        if (cliente == null) {
+            System.out.println("Cliente com ID de usuário " + idUsuario + " não foi encontrado.");
+            throw new IllegalArgumentException("Cliente não encontrado.");
+        }
+
+        List<String> nomesProdutos;
+        try {
+            nomesProdutos = clienteProdutoService.listarProdutosCliente(cliente.getId())
+                    .stream()
+                    .map(ClienteProduto::getProdutoId)
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            System.out.println(
+                    "Erro ao listar produtos para o cliente com ID " + cliente.getId() + ": " + e.getMessage());
+            throw new RuntimeException("Erro ao listar produtos do cliente.", e);
+        }
+
+        ClienteDto clienteDto = new ClienteDto();
+        clienteDto.setId(cliente.getId());
+        clienteDto.setTelefone(cliente.getCelular());
+        clienteDto.setDataNascimento(cliente.getNascimento());
+        clienteDto.setProdutos(nomesProdutos);
+
+        return clienteDto;
+    }
+
     private void atualizarLogin(Integer idUsuario, UsuarioDTO usuarioDto) {
         rest.put(loginServiceUrl + "/atualizarUsuario/" + idUsuario, usuarioDto);
     }
 
-    // mapping
     private void deletarLogin(Integer idUsuario) {
         rest.delete(loginServiceUrl + "/deletarUsuario/" + idUsuario);
     }

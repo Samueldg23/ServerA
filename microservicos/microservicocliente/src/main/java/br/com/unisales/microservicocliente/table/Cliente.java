@@ -29,11 +29,6 @@ public class Cliente {
     private String cpf;
     @Column(name = "celular", nullable = false, length = 10)
     private String celular;
-    /*aqui é uma chave estrangeira que irá referenciar ao usuário mas será
-    em bancos de dados diferentes então tem que ver como vai ficar, as telas web html irá
-    ficar no microserviço de login então tem que ver como encontrar o id do usuário correto para chamar
-    as suas informações e os métodos que ele poderá fazer que estão nesse serviço
-    */ 
     @Column(name = "id_usuario", nullable = false)
     private Integer idUsuario;
 }

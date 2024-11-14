@@ -12,5 +12,6 @@ public class UsuarioDto {
     private String email;
     private String senha;
     private String grupo;
+    private String sexo;
     private Integer ativo;
 }
