@@ -1,11 +1,12 @@
 package br.com.unisales.microservicoproduto.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.unisales.microservicoproduto.model.ProdutoDto;
 import br.com.unisales.microservicoproduto.repository.ProdutoRepository;
 import br.com.unisales.microservicoproduto.table.Produto;
 /*Serviço do produto*/
@@ -52,13 +53,13 @@ public class ProdutoService {
         }
     }
 
-    public String buscarNomeProdutoPorId(Integer produtoId) {
-        Produto produto = repo.findById(produtoId).orElse(null);
-        return produto != null ? produto.getTitulo() : "Produto desconhecido";
-    }
-    
-    
-    public Optional<Produto> findById(Integer id) {
-        return repo.findById(id); // O JpaRepository já fornece o método findById
-    }
+    public List<ProdutoDto> obterProdutosPorIds(List<Integer> ids) {
+    return this.repo.findAllById(ids).stream()
+            .map(produto -> new ProdutoDto(
+                    produto.getId(),
+                    produto.getTitulo(),
+                    produto.getDescricao(),
+                    produto.getPreco()))
+            .collect(Collectors.toList());
+}
 }

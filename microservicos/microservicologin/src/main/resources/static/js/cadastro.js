@@ -1,7 +1,7 @@
 function mostrarCamposCliente() {
     const grupo = document.getElementById("grupo").value;
     const clienteCampos = document.getElementById("clienteCampos");
-
+    //se no grupo estiver cliente vai mostrar os campos que pertencem ao cliente além de somente os do usuários
     clienteCampos.style.display = grupo === "Cliente" ? "block" : "none";
 }
 
@@ -20,7 +20,7 @@ function criarConta() {
         grupo: grupo,
         ativo: 1
     };
-
+    
     fetch("http://localhost:8080/usuarios/salvarUsuario", {
         method: "POST",
         headers: {
@@ -42,10 +42,10 @@ function criarConta() {
         }
 
         if (grupo === "Cliente") {
-            criarCliente(idUsuario);
+            criarCliente(idUsuario);//se for cliente chama a função	de criar cliente
         } else {
             alert("Conta criada com sucesso!");
-            window.location.href = "/";
+            window.location.href = "/"; //chama a tela de login
         }
     })
     .catch(error => {
@@ -83,7 +83,7 @@ function criarCliente(idUsuario) {
     })
     .then(() => {
         alert("Conta de cliente criada com sucesso!");
-        window.location.href = "/";
+        window.location.href = "/"; //tela de login
     })
     .catch(error => {
         console.error("Erro:", error);

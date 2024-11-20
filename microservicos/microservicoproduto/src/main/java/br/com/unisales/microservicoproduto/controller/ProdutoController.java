@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,37 +25,30 @@ public class ProdutoController {
     private ProdutoService servico;
 
     @PostMapping("/salvarProduto")
-    public void salvarProduto(@RequestParam("titulo") String titulo,
-            @RequestParam("descricao") String descricao,
-            @RequestParam(value = "ativo", defaultValue = "1") Integer ativo,
-            @RequestParam("preco") Double preco) {
-        System.out.println("Título: " + titulo);
-        System.out.println("Descrição: " + descricao);
-        System.out.println("Ativo: " + ativo);
-        System.out.println("Preço: " + preco);
-        this.servico.salvar(new Produto(null, titulo, descricao, ativo, preco));
+    public void salvarProduto(@RequestBody Produto produto) {
+        this.servico.salvar(produto);
     }
-
+// admin.js 
     @PutMapping("/atualizarProduto")
-    public void atualizarProduto(@RequestParam("id") Integer id,
-            @RequestParam("titulo") String titulo,
-            @RequestParam("descricao") String descricao,
-            @RequestParam("ativo") Integer ativo,
-            @RequestParam("preco") Double preco) {
-        Produto produto = new Produto(id, titulo, descricao, ativo, preco);
-        this.servico.atualizar(id, produto);
+    public void atualizarProduto(@RequestBody Produto produto) {
+        this.servico.atualizar(produto.getId(), produto);
     }
-
+    //Usado no cliente.js, lá é pego os ids dos produtos associados ao cliente
+    //e depois é pego o id do produto pra colocar os dados em uma tabela
     @GetMapping("/obterProduto")
     public Produto obterProduto(@RequestParam("id") Integer id) {
         return this.servico.obter(id);
     }
-
+//admin.js
     @DeleteMapping("/deletarProduto")
     public void deletarProduto(@RequestParam("produtoId") Integer produtoId) {
         this.servico.deletar(produtoId);
     }
-
+    /*
+     * usado no cliente.js, pegando o título - descrição - preço
+     * também é utilizado no adimin.js para mostrar uma tabela com os produtos
+     * 
+     */
     @GetMapping("/listarProdutos")
     public List<Produto> listarProdutos() {
         return this.servico.listar();

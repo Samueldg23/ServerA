@@ -19,16 +19,16 @@ public class ClienteProdutoService {
         if (clienteId == null || produtoId == null) {
             throw new IllegalArgumentException("Cliente ou Produto inválido");
         }
-    
+
         ClienteProduto cadastro = new ClienteProduto();
         cadastro.setClienteId(clienteId);
         cadastro.setProdutoId(produtoId);
         cadastro.setDataAtivacao(dataAtivacao);
         cadastro.setAtivo(1);
-    
+
         return repo.save(cadastro);
     }
-    
+
     public void desativarProdutoCliente(Integer clienteId, Integer produtoId) {
         List<ClienteProduto> produtos = repo.findByClienteIdAndProdutoIdAndAtivo(clienteId, produtoId, 1);
         for (ClienteProduto produto : produtos) {
@@ -37,7 +37,6 @@ public class ClienteProdutoService {
             repo.save(produto);
         }
     }
-    
 
     public List<ClienteProduto> listarProdutosCliente(Integer clienteId) {
         return repo.findByClienteId(clienteId);
@@ -49,4 +48,5 @@ public class ClienteProdutoService {
                 .map(ClienteProduto::getProdutoId)
                 .collect(Collectors.toList());
     }
+
 }

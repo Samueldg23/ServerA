@@ -28,11 +28,10 @@ public class ClienteService {
     @Autowired
     private RestTemplate rest;
 
-    private final String loginServiceUrl = "http://localhost:8080";
 
     public Cliente salvarCliente(Cliente cliente) {
         try {
-            String url = loginServiceUrl + "/usuarios/buscarUsuario/" + cliente.getIdUsuario();
+            String url = "localhost:8080/usuarios/buscarUsuario/" + cliente.getIdUsuario();
             ResponseEntity<UsuarioDTO> response = rest.getForEntity(url, UsuarioDTO.class);
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -46,24 +45,25 @@ public class ClienteService {
         }
     }
 
-    public Cliente atualizar(Integer id, Cliente cliente, UsuarioDTO usuarioDto) {
+    public Cliente buscarPorIdUsuario(Integer idUsuario) {
+        return repo.findByIdUsuario(idUsuario).orElse(null);
+    }
+    
+
+    public Cliente atualizarCelular(Integer id, String novoCelular) {
         var clienteAtual = repo.findById(id);
         if (clienteAtual.isPresent()) {
-            Cliente clienteNovo = clienteAtual.get();
-            clienteNovo.setNascimento(cliente.getNascimento());
-            clienteNovo.setCpf(cliente.getCpf());
-            clienteNovo.setCelular(cliente.getCelular());
-            atualizarLogin(clienteNovo.getIdUsuario(), usuarioDto);
-            return repo.save(clienteNovo);
+            Cliente cliente = clienteAtual.get();
+            cliente.setCelular(novoCelular);
+            return repo.save(cliente);
         }
         return null;
     }
 
     public void deletar(Integer id) {
-        var client = repo.findById(id);
-        if (client.isPresent()) {
-            Cliente cliente = client.get();
-            deletarLogin(cliente.getIdUsuario());
+        var cliente = repo.findById(id);
+        if (cliente.isPresent()) {
+            deletarLogin(cliente.get().getIdUsuario());
             repo.deleteById(id);
         }
     }
@@ -105,11 +105,8 @@ public class ClienteService {
         return clienteDto;
     }
 
-    private void atualizarLogin(Integer idUsuario, UsuarioDTO usuarioDto) {
-        rest.put(loginServiceUrl + "/atualizarUsuario/" + idUsuario, usuarioDto);
-    }
 
     private void deletarLogin(Integer idUsuario) {
-        rest.delete(loginServiceUrl + "/deletarUsuario/" + idUsuario);
-    }
+        rest.delete("http://localhost:8080/usuarios/deletar/" + idUsuario);
+    }   
 }

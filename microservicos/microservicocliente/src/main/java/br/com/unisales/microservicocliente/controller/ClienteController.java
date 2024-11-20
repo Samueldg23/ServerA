@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.unisales.microservicocliente.model.ClienteDto;
-import br.com.unisales.microservicocliente.model.UsuarioDTO;
-import br.com.unisales.microservicocliente.repository.ClienteRepository;
 import br.com.unisales.microservicocliente.service.ClienteProdutoService;
 import br.com.unisales.microservicocliente.service.ClienteService;
 import br.com.unisales.microservicocliente.table.Cliente;
@@ -30,13 +29,10 @@ public class ClienteController {
 
     @Autowired
     private ClienteService service;
-    
+
     @Autowired
     private ClienteProdutoService clienteProdutoService;
-
-    @Autowired
-    private ClienteRepository repo;
-
+    //cadastro.js depois de salvar o usuário salva o cliente
     @PostMapping("/cadastrar")
     public ResponseEntity<?> cadastrarCliente(@RequestBody Cliente cliente) {
         try {
@@ -46,31 +42,44 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
-    @PostMapping("/atualizar/{id}")
-    public ResponseEntity<?> atualizarCliente(
-            @PathVariable Integer id,
-            @RequestBody Cliente cliente,
-            @RequestBody UsuarioDTO usuarioDto) {
-
-        Cliente clienteAtualizado = service.atualizar(id, cliente, usuarioDto);
-        if (clienteAtualizado != null) {
+    /*
+     * Antes estava pegando pelo clienteId só que no front-end se armazena o id do usuário
+     * e não do cliente, então teve que adaptar para buscar na coluna idUsuario quem tem o 
+     * mesmo valor que o id armazenado no localStorage
+     */
+    @GetMapping("/buscarPorUsuario/{idUsuario}")
+    public ResponseEntity<?> buscarPorIdUsuario(@PathVariable Integer idUsuario) {
+        try {
+            Cliente cliente = service.buscarPorIdUsuario(idUsuario);
+            return ResponseEntity.ok(cliente);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body("Cliente não encontrado: " + e.getMessage());
+        }
+    }
+    //antes tava atualizando tudo mas agora só poderá atualizar o celular
+    @PutMapping("/atualizarCelular/{id}")
+    public ResponseEntity<?> atualizarCelular(@PathVariable Integer id, @RequestBody String novoCelular) {
+        try {
+            Cliente clienteAtualizado = service.atualizarCelular(id, novoCelular);
             return ResponseEntity.ok(clienteAtualizado);
-        } else {
-            return ResponseEntity.status(404).body("Cliente não encontrado.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("Número de celular inválido.");
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body("Cliente não encontrado: " + e.getMessage());
         }
     }
 
+    // Deletar cliente
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<?> deletarCliente(@PathVariable Integer id) {
         try {
             service.deletar(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return ResponseEntity.status(404).body("Erro ao deletar cliente: " + e.getMessage());
+            return ResponseEntity.status(500).body("Erro ao deletar cliente: " + e.getMessage());
         }
     }
-
+/*    Verificar se está sendo necessário usar daqui para baixo*/
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarClientePorId(@PathVariable Integer id) {
         Cliente cliente = service.buscarPorId(id);
@@ -97,7 +106,7 @@ public class ClienteController {
         List<String> nomesProdutos = clienteProdutoService.listarProdutosCliente(clienteId)
                 .stream()
                 .map(ClienteProduto::getProdutoId)
-                .map(Object::toString) // Corrigindo o tipo de mapeamento para String
+                .map(Object::toString)
                 .collect(Collectors.toList());
 
         ClienteDto clienteDto = new ClienteDto();
@@ -106,10 +115,6 @@ public class ClienteController {
         clienteDto.setProdutos(nomesProdutos);
 
         return ResponseEntity.ok(clienteDto);
-    }
-
-    public Cliente buscarPorIdUsuario(Integer idUsuario) {
-        return repo.findByIdUsuario(idUsuario).orElse(null);
     }
 
     @GetMapping("/detalhes/usuario/{idUsuario}")

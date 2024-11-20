@@ -1,31 +1,37 @@
-/* Estilos básicos */
-* {
-    box-sizing: border-box;
-}
-
+/* Estilo geral */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
     margin: 0;
     padding: 0;
+    color: #fff;
+    background: #000; /* Fallback */
 }
 
-/* Estilo do cabeçalho */
+.background {
+    background: url('../images/cliente_fundo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Cabeçalho */
 header {
-    background-color: #007bff;
-    color: white;
-    padding: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    padding: 20px 0;
     text-align: center;
 }
 
 header h1 {
+    font-size: 2em;
     margin: 0;
-    font-size: 1.8em;
+    color: #fff;
 }
 
 header nav ul {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
     margin: 10px 0 0 0;
     display: flex;
@@ -37,68 +43,74 @@ header nav ul li {
 }
 
 header nav ul li a {
-    color: white;
     text-decoration: none;
+    color: #fff;
     font-weight: bold;
+    font-size: 1.2em;
 }
 
 header nav ul li a:hover {
-    text-decoration: underline;
+    color: #ccc;
 }
 
-/* Container e layout das seções */
+/* Container */
 .container {
+    max-width: 1200px;
+    margin: 30px auto;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    box-shadow: 0px 0px 10px #000;
+}
+
+/* Formulários */
+.form-group {
+    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
 }
 
-.section {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-}
-
-h2 {
-    color: #007bff;
-    margin-bottom: 15px;
-}
-
-/* Estilo dos formulários */
-form label {
+label {
+    font-size: 1em;
     font-weight: bold;
-    margin-top: 10px;
-    display: block;
+    color: #fff;
+    margin-bottom: 5px;
 }
 
-form input {
-    width: 100%;
+input {
     padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+input:disabled {
+    color: #fff; /* Ajuste para texto branco */
 }
 
 button {
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
+    background: #6a5acd;
     border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    padding: 10px 15px;
-    transition: background-color 0.3s ease;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background: #483d8b;
 }
 
-/* Estilo da tabela */
+/* Seções */
+.section.hidden {
+    display: none;
+}
+
+/* Tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -106,77 +118,16 @@ table {
 }
 
 table th, table td {
-    padding: 12px;
+    padding: 15px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid #444;
+    color: #fff;
 }
 
 table th {
-    background-color: #007bff;
-    color: white;
+    background: #6a5acd;
 }
 
 table td {
-    background-color: #f3f3f3;
-}
-
-/* Estilos específicos para campos ocultos */
-.hidden {
-    display: none;
-}
-
-/* Estilos para o formulário do perfil */
-#perfil-form table {
-    width: 100%;
-}
-
-#perfil-form table th,
-#perfil-form table td {
-    padding: 10px;
-    vertical-align: middle;
-}
-
-#perfil-form table th {
-    width: 30%;
-    background-color: #007bff;
-    color: white;
-    text-align: left;
-    border-radius: 4px 0 0 4px;
-}
-
-#perfil-form table td {
-    width: 70%;
-}
-
-#perfil-form input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-button {
-    margin-top: 15px;
-}
-
-/* Estilo da tabela de produtos associados */
-.associated-products {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-.associated-products th, .associated-products td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #ddd;
-}
-
-.associated-products th {
-    background-color: #007bff;
-    color: white;
-}
-
-.associated-products td {
-    background-color: #f3f3f3;
+    background: rgba(255, 255, 255, 0.1);
 }

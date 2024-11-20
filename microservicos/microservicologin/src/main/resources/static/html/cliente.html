@@ -7,118 +7,99 @@
         <link rel="stylesheet" href="../css/cliente.css">
     </head>
     <body>
-        <header>
-            <h1>Painel do Cliente</h1>
-            <nav>
-                <ul>
-                    <li><a href="#" id="perfil-link">Gerenciar Perfil</a></li>
-                    <li><a href="#" id="produtos-link">Visualizar
-                            Produtos</a></li>
-                </ul>
-            </nav>
-        </header>
-        <div class="container">
-            <main class="content">
-                <!-- Gerenciar Perfil -->
-                <section id="perfil-section" class="section active">
-                    <h2>Gerenciar Perfil</h2>
-                    <form id="perfil-form">
-                        <table>
-                            <tr>
-                                <th>Nome</th>
-                                <td><input type="text" value="Nome do Cliente"
-                                        disabled /></td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td><input type="email"
-                                        value="email@exemplo.com" /></td>
-                            </tr>
-                            <tr>
-                                <th>Senha</th>
-                                <td><input type="password"
-                                        value="senha123" /></td>
-                            </tr>
-                            <tr>
-                                <th>Data de Nascimento</th>
-                                <td><input type="text" value="01/01/2000"
-                                        disabled /></td>
-                            </tr>
-                            <tr>
-                                <th>CPF</th>
-                                <td><input type="text" value="000.000.000-00"
-                                        disabled /></td>
-                            </tr>
-                            <tr>
-                                <th>Celular</th>
-                                <td><input type="text"
-                                        value="(00) 00000-0000" /></td>
-                            </tr>
+        <div class="background">
+            <header>
+                <h1>Painel do Cliente</h1>
+                <nav>
+                    <ul>
+                        <li><a href="#" id="perfil-link">Gerenciar Perfil</a></li>
+                        <li><a href="#" id="produtos-link">Visualizar Produtos</a></li>
+                    </ul>
+                </nav>
+            </header>
+            <div class="container">
+                <main class="content">
+                    <!-- Gerenciar Perfil -->
+                    <section id="perfil-section" class="section active">
+                        <h2>Gerenciar Perfil</h2>
+                        <form id="perfil-form">
+                            <div class="form-group">
+                                <label for="usuario-id">Id Usuário</label>
+                                <input id="usuario-id" type="text" disabled />
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-id">Id Cliente</label>
+                                <input id="cliente-id" type="text" disabled />
+                            </div>
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input id="nome" type="text" />
+                            </div>
+                            <div class="form-group">
+                                <label for="sexo">Sexo</label>
+                                <input id="sexo" type="text" disabled />
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input id="email" type="email" />
+                            </div>
+                            <div class="form-group">
+                                <label for="senha">Senha</label>
+                                <input id="senha" type="password" />
+                            </div>
+                            <div class="form-group">
+                                <label for="ativo">Ativo</label>
+                                <input id="ativo" type="text" disabled />
+                            </div>
+                            <div class="form-group">
+                                <label for="nascimento">Data de Nascimento</label>
+                                <input id="nascimento" type="text" disabled />
+                            </div>
+                            <div class="form-group">
+                                <label for="cpf">CPF</label>
+                                <input id="cpf" type="text" disabled />
+                            </div>
+                            <div class="form-group">
+                                <label for="celular">Celular</label>
+                                <input id="celular" type="text" />
+                            </div>
+                            <button type="button" onclick="salvarAlteracoes()">Salvar Alterações</button>
+                        </form>
+
+                        <!-- Tabela de Produtos Associados -->
+                        <h2>Produtos Associados</h2>
+                        <table class="associated-products" id="produtos-table">
+                            <thead>
+                                <tr>
+                                    <th>Id do produto</th>
+                                    <th>Título</th>
+                                    <th>Descrição</th>
+                                    <th>Data de Ativação</th>
+                                    <th>Data de Inativação</th>
+                                    <th>Preço</th>
+                                    <th>Ativo</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
                         </table>
-                        <button type="submit">Salvar Alterações</button>
-                    </form>
+                    </section>
 
-                    <!-- Tabela de Produtos Associados -->
-                    <h2>Produtos Associados</h2>
-                    <table class="associated-products">
-                        <thead>
-                            <tr>
-                                <th>Título</th>
-                                <th>Data de Ativação</th>
-                                <th>Data de Inativação</th>
-                                <th>Preço</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Produto A</td>
-                                <td>10/10/2023</td>
-                                <td>—</td>
-                                <td>R$ 100,00</td>
-                            </tr>
-                            <tr>
-                                <td>Produto B</td>
-                                <td>15/09/2023</td>
-                                <td>01/10/2023</td>
-                                <td>R$ 150,00</td>
-                            </tr>
-                            <!-- Adicione mais produtos aqui conforme necessário -->
-                        </tbody>
-                    </table>
-                </section>
-
-                <!-- Produtos Associados -->
-                <section id="produtos-associados-section"
-                    class="section hidden">
-                    <h2>Produtos Associados</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Título</th>
-                                <th>Data da Ativação</th>
-                                <th>Data da Inativação</th>
-                                <th>Preço Pago</th>
-                            </tr>
-                        </thead>
-                        <tbody id="produtos-associados-lista"></tbody>
-                    </table>
-                </section>
-
-                <!-- Visualizar Produtos -->
-                <section id="produtos-section" class="section hidden">
-                    <h2>Produtos Disponíveis</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Título</th>
-                                <th>Descrição</th>
-                                <th>Preço</th>
-                            </tr>
-                        </thead>
-                        <tbody id="produtos-lista"></tbody>
-                    </table>
-                </section>
-            </main>
+                    <!-- Visualizar Produtos -->
+                    <section id="produtos-section" class="section hidden">
+                        <h2>Produtos Disponíveis</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Descrição</th>
+                                    <th>Preço</th>
+                                </tr>
+                            </thead>
+                            <tbody id="produtos-lista"></tbody>
+                        </table>
+                    </section>
+                </main>
+            </div>
         </div>
         <script src="../js/cliente.js"></script>
     </body>

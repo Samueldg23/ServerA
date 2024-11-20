@@ -3,135 +3,121 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Painel do Administrador</title>
+        <title>Painel de Administração</title>
         <link rel="stylesheet" href="../css/admin.css">
     </head>
     <body>
-        <header>
-            <h1>Painel de Administração</h1>
-            <nav>
-                <ul>
-                    <li><a href="#" id="produtos-link">Gerenciar
-                            Produtos</a></li>
-                    <li><a href="#" id="clientes-link">Gerenciar
-                            Clientes</a></li>
-                    <li><a href="#" id="perfil-link">Gerenciar Perfil</a></li>
-                    <li><a href="#" id="associar-produtos-link">Associar
-                            Produtos</a></li>
-                </ul>
-            </nav>
-        </header>
-        <div class="container">
-            <main class="content">
-                <!-- Gerenciar Produtos -->
-                <section id="produtos-section" class="section active">
-                    <h2>Gerenciar Produtos</h2>
-                    <div class="crud-produto">
-                        <form id="produto-form">
-                            <input type="hidden" id="produto-id">
-                            <label for="titulo">Título</label>
-                            <input type="text" id="titulo" required>
-                            <label for="descricao">Descrição</label>
-                            <textarea id="descricao" required></textarea>
-                            <label for="preco">Preço</label>
-                            <input type="number" id="preco" step="0.01"
-                                required>
-                            <label for="ativo">Ativo</label>
-                            <!-- ToggleButton para Ativo -->
-                            <input type="checkbox" id="ativo"
-                                class="toggle-ativo">
-                            <button type="submit">Salvar Produto</button>
-                        </form>
+        <div class="background">
+            <header>
+                <h1>Painel de Administração</h1>
+                <nav>
+                    <ul>
+                        <li><a href="#" id="produtos-link">Gerenciar Produtos</a></li>
+                        <li><a href="#" id="clientes-link">Gerenciar Clientes</a></li>
+                        <li><a href="#" id="perfil-link">Gerenciar Perfil</a></li>
+                        <li><a href="#" id="associar-produtos-link">Associar Produtos</a></li>
+                    </ul>
+                </nav>
+            </header>
 
-                        <p id="mensagem-sucesso"
-                            class="success-message hidden"></p>
-                        <div id="produto-lista">
-                            <h3>Lista de Produtos</h3>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Título</th>
-                                        <th>Descrição</th>
-                                        <th>Preço</th>
-                                        <th>Ativo</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="produtos-ul"></tbody>
-                            </table>
+            <div class="container">
+                <main class="content">
+                    <!-- Gerenciar Produtos -->
+                    <section id="produtos-section" class="section active">
+                        <h2>Gerenciar Produtos</h2>
+                        <div class="crud-produto">
+                            <form id="produto-form">
+                                <input type="hidden" id="produto-id">
+                                <label for="titulo">Título</label>
+                                <input type="text" id="titulo" required>
+                                <label for="descricao">Descrição</label>
+                                <textarea id="descricao" required></textarea>
+                                <label for="preco">Preço</label>
+                                <input type="number" id="preco" step="0.01" required>
+                                <label for="ativo">Ativo</label>
+                                <input type="checkbox" id="ativo" class="toggle-ativo">
+                                <button type="submit">Salvar Produto</button>
+                            </form>
+                            <p id="mensagem-sucesso" class="success-message hidden"></p>
+                            <div id="produto-lista">
+                                <h3>Lista de Produtos</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Título</th>
+                                            <th>Descrição</th>
+                                            <th>Preço</th>
+                                            <th>Ativo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="produtos-ul"></tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Gerenciar Clientes -->
-                <section id="clientes-section" class="section hidden">
-                    <h2>Gerenciar Clientes</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID Usuário</th>
-                                <th>ID Cliente</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Ativo</th>
-                                <th>Data Nascimento</th>
-                                <th>Telefone</th>
-                                <th>Produtos Associados</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clientes-ul"></tbody>
-                    </table>
-                </section>
+                    <!-- Gerenciar Clientes -->
+                    <section id="clientes-section" class="section hidden">
+                        <h2>Gerenciar Clientes</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID Usuário</th>
+                                    <th>ID Cliente</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Ativo</th>
+                                    <th>Data Nascimento</th>
+                                    <th>Telefone</th>
+                                    <th>Produtos Associados</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientes-ul"></tbody>
+                        </table>
+                    </section>
                 
-                <!-- Gerenciar Perfil -->
-                <section id="perfil-section" class="section">
-                    <h2>Gerenciar Perfil</h2>
-                    <div id="perfil-info">
-                        <form id="perfil-form">
-                            <label for="admin-nome">Nome:</label>
-                            <input type="text" id="admin-nome" required>
+                    <!-- Gerenciar Perfil -->
+                    <section id="perfil-section" class="section">
+                        <h2>Gerenciar Perfil</h2>
+                        <div id="perfil-info">
+                            <form id="perfil-form">
+                                <label for="admin-nome">Nome:</label>
+                                <input type="text" id="admin-nome" required>
+                                <label for="admin-email">Email:</label>
+                                <input type="email" id="admin-email" required>
+                                <label for="admin-senha">Senha:</label>
+                                <input type="password" id="admin-senha" required>
+                                <label for="admin-ativo">Ativo:</label>
+                                <select id="admin-ativo" required>
+                                    <option value="1">Ativo</option>
+                                    <option value="0">Inativo</option>
+                                </select>
+                                <label for="admin-sexo">Sexo:</label>
+                                <input type="text" id="admin-sexo" disabled>
+                                <label for="admin-grupo">Grupo:</label>
+                                <input type="text" id="admin-grupo" disabled>
+                                <button type="submit">Salvar Perfil</button>
+                                <button type="button" id="deletar-conta">Deletar Conta</button>
+                            </form>
+                        </div>
+                    </section>
 
-                            <label for="admin-email">Email:</label>
-                            <input type="email" id="admin-email" required>
-
-                            <label for="admin-senha">Senha:</label>
-                            <input type="password" id="admin-senha" required>
-
-                            <!-- Campo editável para "ativo" -->
-                            <label for="admin-ativo">Ativo:</label>
-                            <select id="admin-ativo" required>
-                                <option value="1">Ativo</option>
-                                <option value="0">Inativo</option>
-                            </select>
-
-                            <!-- Campos somente leitura -->
-                            <label for="admin-sexo">Sexo:</label>
-                            <input type="text" id="admin-sexo" disabled>
-
-                            <label for="admin-grupo">Grupo:</label>
-                            <input type="text" id="admin-grupo" disabled>
-
-                            <button type="submit">Salvar Perfil</button>
-                            <button type="button" id="deletar-conta">Deletar
-                                Conta</button>
+                    <!-- Associar Produtos -->
+                    <section id="associar-produtos-section" class="section hidden">
+                        <h2>Associar Produtos</h2>
+                        <form id="associar-produto-form">
+                            <label for="cliente-id">ID do Cliente:</label>
+                            <input type="number" id="cliente-id" required>
+                            <label for="produto-id">ID do Produto:</label>
+                            <input type="number" id="produto-id-2" required>
+                            <button type="button" onclick="associarProduto()">Associar Produto</button>
+                            <button type="button" onclick="desassociarProduto()">Desassociar Produto</button>
                         </form>
-                    </div>
-                </section>
-
-                <!-- Associar Produtos -->
-                <section id="associar-produtos-section" class="section hidden">
-                    <h2>Associar Produtos</h2>
-                    <form id="associar-produto-form">
-                        <label for="cliente-id">ID do Cliente:</label>
-                        <input type="number" id="cliente-id" required>
-                        <label for="produto-id">ID do Produto:</label>
-                        <input type="number" id="produto-id-2" required>
-                        <button type="button" onclick="associarProduto()">Associar Produto</button>
-                        <button type="button" onclick="desassociarProduto()">Desassociar Produto</button>
-                    </form>
-                </section>
+                    </section>
                 
-            </main>
+                </main>
+            </div>
         </div>
         <script src="../js/admin.js"></script>
     </body>

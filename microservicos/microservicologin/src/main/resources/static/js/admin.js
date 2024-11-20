@@ -24,17 +24,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Funções de CRUD Produtos
-    // Função para carregar produtos
-    async function carregarProdutos() {
-        const response = await fetch("http://localhost:8090/produtos/listarProdutos");
-        const produtos = await response.json();
-        const produtosUl = document.getElementById("produtos-ul");
-        produtosUl.innerHTML = "";
 
-        produtos.forEach(produto => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
+    // Funções de CRUD Produtos
+    // Função para carregar produtos e listá-los na tabela
+async function carregarProdutos() {
+    const response = await fetch("http://localhost:8090/produtos/listarProdutos");
+    const produtos = await response.json();
+    const produtosUl = document.getElementById("produtos-ul");
+    produtosUl.innerHTML = "";
+    //diferente do cliente aqui mostrar o id do produtos também e se ele tá ativo ou não
+    produtos.forEach(produto => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
             <td>${produto.id}</td>
             <td>${produto.titulo}</td>
             <td>${produto.descricao}</td>
@@ -44,66 +45,93 @@ document.addEventListener("DOMContentLoaded", function () {
                     ${produto.ativo ? "✔️" : "❌"}
                 </span>
             </td>
+            <td>
+                <button onclick="editarProduto(${produto.id})">Editar</button>
+                <button onclick="excluirProduto(${produto.id})">Excluir</button>
+            </td>
         `;
-            produtosUl.appendChild(row);
+        produtosUl.appendChild(row);
+    });
+}
+
+// Função para salvar ou atualizar um produto
+async function salvarProduto(event) {
+    //evita recarregar a página
+    event.preventDefault();
+
+    // id do produto, se for um novo define como null
+    const id = document.getElementById("produto-id").value || null;
+    const titulo = document.getElementById("titulo").value;
+    const descricao = document.getElementById("descricao").value;
+    const preco = parseFloat(document.getElementById("preco").value);
+    // define 1 para novos produtos, para existentes usa o valor do checkbox
+    const ativo = id ? (document.getElementById("ativo").checked ? 1 : 0) : 1;
+
+    const produto = { id, titulo, descricao, preco, ativo };
+
+    const url = id
+        ? `http://localhost:8090/produtos/atualizarProduto`
+        //posso simplificar e tirar esse atualizar e aí posso definir o id como null e o ativo como 1 
+        //aqui verifica se for colocado um id já existente vai ser um put e se for com um id null vai ser post
+        : `http://localhost:8090/produtos/salvarProduto`;
+    const method = id ? "PUT" : "POST";
+
+    try {
+        const response = await fetch(url, {
+            method,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(produto),
         });
+
+        if (response.ok) {
+            alert("Produto salvo com sucesso!");
+            carregarProdutos();
+            document.getElementById("produto-form").reset();
+        } else {
+            alert("Erro ao salvar produto. Verifique os dados e tente novamente.");
+        }
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+        alert("Erro ao salvar produto. Verifique a conexão com o servidor.");
     }
+}
 
-    async function salvarProduto(event) {
-        event.preventDefault();
+// Função para carregar os dados de um produto no formulário para edição
+// não implementei a edição, falta de tempo!, não tem esse endpoint no controller
 
-        const titulo = document.getElementById("titulo").value;
-        const descricao = document.getElementById("descricao").value;
-        const preco = parseFloat(document.getElementById("preco").value);
-        const ativo = 1; 
+async function editarProduto(id) {
+    const response = await fetch(`http://localhost:8090/produtos/obterProduto?id=${id}`);
+    const produto = await response.json();
 
-        const formData = new URLSearchParams();
-        formData.append("titulo", document.getElementById("titulo").value);
-        formData.append("descricao", document.getElementById("descricao").value);
-        formData.append("preco", parseFloat(document.getElementById("preco").value) || 0);
-        formData.append("ativo", 1);
+    document.getElementById("produto-id").value = produto.id;
+    document.getElementById("titulo").value = produto.titulo;
+    document.getElementById("descricao").value = produto.descricao;
+    document.getElementById("preco").value = produto.preco;
+    document.getElementById("ativo").checked = produto.ativo === 1;
+}
 
-
+// Função para excluir um produto
+async function excluirProduto(id) {
+    if (confirm("Tem certeza que deseja excluir este produto?")) {
         try {
-            const response = await fetch("http://localhost:8090/produtos/salvarProduto", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: formData.toString(),
+            const response = await fetch(`http://localhost:8090/produtos/deletarProduto?produtoId=${id}`, {
+                method: "DELETE",
             });
 
             if (response.ok) {
-                alert("Produto salvo com sucesso!");
+                alert("Produto excluído com sucesso!");
                 carregarProdutos();
-                document.getElementById("produto-form").reset();
             } else {
-                alert("Erro ao salvar produto. Verifique os dados e tente novamente.");
+                alert("Erro ao excluir o produto.");
             }
         } catch (error) {
             console.error("Erro na requisição:", error);
-            alert("Erro ao salvar produto. Verifique a conexão com o servidor.");
+            alert("Erro ao excluir produto. Verifique a conexão com o servidor.");
         }
     }
-
-
-    async function editarProduto(id) {
-        const response = await fetch(`http://localhost:8090/produtos/obterProduto?id=${id}`);
-        const produto = await response.json();
-
-        document.getElementById("produto-id").value = produto.id;
-        document.getElementById("titulo").value = produto.titulo;
-        document.getElementById("descricao").value = produto.descricao;
-        document.getElementById("preco").value = produto.preco;
-        document.getElementById("ativo").value = produto.ativo;
-    }
-
-    async function excluirProduto(id) {
-        if (confirm("Tem certeza que deseja excluir este produto?")) {
-            await fetch(`http://localhost:8090/produtos/deletarProduto?produtoId=${id}`, { method: "DELETE" });
-            carregarProdutos();
-        }
-    }
+}
 
     document.getElementById("produto-form").addEventListener("submit", salvarProduto);
     carregarProdutos();
@@ -122,7 +150,9 @@ async function carregarClientes() {
         clientesUl.innerHTML = "";
 
         usuarios
-            .filter(usuario => usuario.grupo === "Cliente") // Filtro para selecionar apenas os usuários do grupo 'cliente'
+        // tira os outros administradores com o filtro
+        // só listar id do usuário e cliente, nome email ativo data celular e os produtos
+            .filter(usuario => usuario.grupo === "Cliente") 
             .forEach(usuario => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -148,6 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Gerenciar o perfil
+//testei uma vez se isso tá funcionando, verificar mais vezes pra explicar melhor
 document.addEventListener("DOMContentLoaded", () => {
     carregarPerfil();
 
@@ -168,7 +199,7 @@ async function carregarPerfil() {
 
     if (!usuarioId) {
         alert("Usuário não autenticado. Redirecionando para login.");
-        window.location.href = "/login";
+        window.location.href = "/";
         return;
     }
 
@@ -185,7 +216,7 @@ async function carregarPerfil() {
              const sexo = usuario.sexo === 'M' ? 'Masculino' : 'Feminino';
              document.getElementById("admin-sexo").value = sexo;
  
-            document.getElementById("admin-ativo").value = usuario.ativo === 1 ? "1" : "0";
+            document.getElementById("admin-ativo").value = usuario.ativo === 1 ? "Ativo" : "Inativo";
 
  
              document.getElementById("admin-grupo").value = usuario.grupo;
@@ -285,7 +316,7 @@ async function associarProduto() {
 async function desassociarProduto() {
     const clienteId = parseInt(document.getElementById('cliente-id').value);
     const produtoId = parseInt(document.getElementById('produto-id-2').value);
-
+    //concluir isso aqui
     try {
         const response = await fetch('http://localhost:8085/clienteProduto/desassociar', {
             method: 'DELETE',
