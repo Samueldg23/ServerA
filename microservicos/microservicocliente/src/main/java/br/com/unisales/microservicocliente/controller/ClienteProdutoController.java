@@ -31,32 +31,43 @@ public class ClienteProdutoController {
         try {
             Integer clienteId = (Integer) payload.get("clienteId");
             Integer produtoId = (Integer) payload.get("produtoId");
+    
             if (clienteId == null || produtoId == null) {
                 return ResponseEntity.badRequest().body("ClienteId ou ProdutoId não fornecido.");
             }
+    
             Date dataAtivacao = new Date();
-
             ClienteProduto cadastro = service.cadastrarProdutoCliente(clienteId, produtoId, dataAtivacao);
             return ResponseEntity.ok(cadastro);
+    
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.status(500).body("Erro interno: " + e.getMessage());
         }
     }
+    
     //admin.js, é usado somente o id do cliente e do produto pra ficar mais fácil, não foi finalizado a desassocição por completo, Terminar isso
     @DeleteMapping("/desassociar")
-    public ResponseEntity<?> desassociarProdutoCliente(@RequestBody Map<String, Object> payload) {
-        try {
-            Integer clienteId = (Integer) payload.get("clienteId");
-            Integer produtoId = (Integer) payload.get("produtoId");
+public ResponseEntity<?> desassociarProdutoCliente(@RequestBody Map<String, Object> payload) {
+    try {
+        Integer clienteId = (Integer) payload.get("clienteId");
+        Integer produtoId = (Integer) payload.get("produtoId");
 
-            service.desativarProdutoCliente(clienteId, produtoId);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
+        if (clienteId == null || produtoId == null) {
+            return ResponseEntity.badRequest().body("ClienteId ou ProdutoId não fornecido.");
         }
+
+        service.desativarProdutoCliente(clienteId, produtoId);
+        return ResponseEntity.ok("Produto desassociado com sucesso.");
+
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body("Erro interno: " + e.getMessage());
     }
+}
+
     //verificar se ainda está usando isso aqui
     @GetMapping("/listar/{clienteId}")
     public ResponseEntity<List<ClienteProduto>> listarProdutosCliente(@PathVariable Integer clienteId) {

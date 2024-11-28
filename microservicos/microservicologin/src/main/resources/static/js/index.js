@@ -17,7 +17,6 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             const data = await response.json();
             // Armazena informações no localStorage
             localStorage.setItem('usuarioId', data.id);
-            localStorage.setItem('usuarioEmail', data.email);
             localStorage.setItem('usuarioGrupo', data.grupo);
 
             // Redireciona com base no grupo do usuário

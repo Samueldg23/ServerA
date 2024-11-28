@@ -19,24 +19,37 @@ public class ClienteProdutoService {
         if (clienteId == null || produtoId == null) {
             throw new IllegalArgumentException("Cliente ou Produto inválido");
         }
-
+    
+        // verificar se já existe uma associação ativa
+        List<ClienteProduto> existentes = repo.findByClienteIdAndProdutoIdAndAtivo(clienteId, produtoId, 1);
+        if (!existentes.isEmpty()) {
+            throw new IllegalArgumentException("Produto já está associado a este cliente.");
+        }
+    
         ClienteProduto cadastro = new ClienteProduto();
         cadastro.setClienteId(clienteId);
         cadastro.setProdutoId(produtoId);
-        cadastro.setDataAtivacao(dataAtivacao);
+        cadastro.setDataAtivacao(dataAtivacao != null ? dataAtivacao : new Date());
         cadastro.setAtivo(1);
-
+    
         return repo.save(cadastro);
     }
+    
 
     public void desativarProdutoCliente(Integer clienteId, Integer produtoId) {
         List<ClienteProduto> produtos = repo.findByClienteIdAndProdutoIdAndAtivo(clienteId, produtoId, 1);
+    
+        if (produtos.isEmpty()) {
+            throw new IllegalArgumentException("Nenhuma associação ativa encontrada para este cliente e produto.");
+        }
+    
         for (ClienteProduto produto : produtos) {
             produto.setAtivo(0);
             produto.setDataInativacao(new Date());
             repo.save(produto);
         }
     }
+    
 
     public List<ClienteProduto> listarProdutosCliente(Integer clienteId) {
         return repo.findByClienteId(clienteId);

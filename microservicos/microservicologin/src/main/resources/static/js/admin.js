@@ -316,7 +316,12 @@ async function associarProduto() {
 async function desassociarProduto() {
     const clienteId = parseInt(document.getElementById('cliente-id').value);
     const produtoId = parseInt(document.getElementById('produto-id-2').value);
-    //concluir isso aqui
+
+    if (isNaN(clienteId) || isNaN(produtoId)) {
+        alert("ID do cliente ou ID do produto inválido.");
+        return;
+    }
+
     try {
         const response = await fetch('http://localhost:8085/clienteProduto/desassociar', {
             method: 'DELETE',

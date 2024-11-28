@@ -35,7 +35,6 @@ function criarConta() {
         return response.json();
     })
     .then(usuario => {
-        console.log('usuario: ', usuario);
         const idUsuario = usuario.id;
         if (!idUsuario) {
             throw new Error("ID do usuário não retornado.");
