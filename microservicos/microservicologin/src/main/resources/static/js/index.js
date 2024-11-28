@@ -6,7 +6,6 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     const senha = document.getElementById('senha').value;
 
     try {
-        // Envia uma requisição POST para autenticar o usuário
         const response = await fetch('http://localhost:8080/usuarios/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -15,11 +14,9 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 
         if (response.ok) {
             const data = await response.json();
-            // Armazena informações no localStorage
             localStorage.setItem('usuarioId', data.id);
             localStorage.setItem('usuarioGrupo', data.grupo);
 
-            // Redireciona com base no grupo do usuário
             if (data.grupo === 'Administrador') {
                 window.location.href = '/admin';
             } else {
@@ -29,13 +26,11 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             throw new Error('Email ou senha inválidos');
         }
     } catch (error) {
-        // Mostra erro ao usuário
         alert('Falha no login: ' + error.message);
         console.error('Erro ao realizar login:', error);
     }
 });
 
-// Alternar visibilidade da senha
 document.getElementById('toggleSenha').addEventListener('click', function () {
     const senhaInput = document.getElementById('senha');
     const isPassword = senhaInput.type === 'password';

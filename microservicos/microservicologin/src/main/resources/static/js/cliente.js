@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    //cria uma contante usuarioId com o id que o index armazenou
+    //cria uma constante usuarioId com o id que o index armazenou
     const usuarioId = localStorage.getItem("usuarioId");
 
     if (!usuarioId) {
@@ -150,7 +150,7 @@ async function salvarAlteracoes() {
     const novoCelular = document.getElementById("celular").value;
 
     try {
-        await fetch(`http://localhos:8080/usuarios/alterar/${idUsuario}`, {
+        await fetch(`http://localhost:8080/usuarios/alterar/${idUsuario}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(usuarioAtualizado)
