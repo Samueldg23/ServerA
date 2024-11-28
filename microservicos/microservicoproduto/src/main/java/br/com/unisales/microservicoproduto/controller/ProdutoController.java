@@ -3,6 +3,7 @@ package br.com.unisales.microservicoproduto.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,22 +29,32 @@ public class ProdutoController {
     public void salvarProduto(@RequestBody Produto produto) {
         this.servico.salvar(produto);
     }
-// admin.js 
+
+    // admin.js
     @PutMapping("/atualizarProduto")
-    public void atualizarProduto(@RequestBody Produto produto) {
-        this.servico.atualizar(produto.getId(), produto);
+public ResponseEntity<Produto> atualizarProduto(@RequestBody Produto produto) {
+    if (produto.getId() == null) {
+        return ResponseEntity.badRequest().build();
     }
-    //Usado no cliente.js, lá é pego os ids dos produtos associados ao cliente
-    //e depois é pego o id do produto pra colocar os dados em uma tabela
+
+    Produto produtoAtualizado = servico.atualizar(produto.getId(), produto);
+    return ResponseEntity.ok(produtoAtualizado);
+}
+
+
+    // Usado no cliente.js, lá é pego os ids dos produtos associados ao cliente
+    // e depois é pego o id do produto pra colocar os dados em uma tabela
     @GetMapping("/obterProduto")
     public Produto obterProduto(@RequestParam("id") Integer id) {
         return this.servico.obter(id);
     }
-//admin.js
+
+    // admin.js
     @DeleteMapping("/deletarProduto")
     public void deletarProduto(@RequestParam("produtoId") Integer produtoId) {
         this.servico.deletar(produtoId);
     }
+
     /*
      * usado no cliente.js, pegando o título - descrição - preço
      * também é utilizado no adimin.js para mostrar uma tabela com os produtos

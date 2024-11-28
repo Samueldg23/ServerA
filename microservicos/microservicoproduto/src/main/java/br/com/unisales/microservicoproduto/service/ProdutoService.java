@@ -20,18 +20,18 @@ public class ProdutoService {
     }
 
     public Produto atualizar(Integer id, Produto produto) {
-        // Usando o método findById() do JpaRepository
-        Produto produtoExistente = repo.findById(id).orElse(null);
-
-        if (produtoExistente != null) {
-            produtoExistente.setTitulo(produto.getTitulo());
-            produtoExistente.setDescricao(produto.getDescricao());
-            produtoExistente.setAtivo(produto.getAtivo());
-            produtoExistente.setPreco(produto.getPreco());
-            return repo.save(produtoExistente);
-        }
-        return null;
+        Produto produtoExistente = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado com o ID: " + id));
+    
+        produtoExistente.setTitulo(produto.getTitulo());
+        produtoExistente.setDescricao(produto.getDescricao());
+        produtoExistente.setAtivo(produto.getAtivo());
+        produtoExistente.setPreco(produto.getPreco());
+    
+        return repo.save(produtoExistente);
     }
+    
+    
     public void deletar(Integer produtoId) {
         this.repo.deleteById(produtoId);
     }

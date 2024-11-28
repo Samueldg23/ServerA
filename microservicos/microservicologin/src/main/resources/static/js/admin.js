@@ -27,15 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Funções de CRUD Produtos
     // Função para carregar produtos e listá-los na tabela
-async function carregarProdutos() {
-    const response = await fetch("http://localhost:8090/produtos/listarProdutos");
-    const produtos = await response.json();
-    const produtosUl = document.getElementById("produtos-ul");
-    produtosUl.innerHTML = "";
-    //diferente do cliente aqui mostrar o id do produtos também e se ele tá ativo ou não
-    produtos.forEach(produto => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
+    async function carregarProdutos() {
+        const response = await fetch("http://localhost:8090/produtos/listarProdutos");
+        const produtos = await response.json();
+        const produtosUl = document.getElementById("produtos-ul");
+        produtosUl.innerHTML = "";
+        //diferente do cliente aqui mostrar o id do produtos também e se ele tá ativo ou não
+        produtos.forEach(produto => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
             <td>${produto.id}</td>
             <td>${produto.titulo}</td>
             <td>${produto.descricao}</td>
@@ -50,88 +50,73 @@ async function carregarProdutos() {
                 <button onclick="excluirProduto(${produto.id})">Excluir</button>
             </td>
         `;
-        produtosUl.appendChild(row);
-    });
-}
-
-// Função para salvar ou atualizar um produto
-async function salvarProduto(event) {
-    //evita recarregar a página
-    event.preventDefault();
-
-    // id do produto, se for um novo define como null
-    const id = document.getElementById("produto-id").value || null;
-    const titulo = document.getElementById("titulo").value;
-    const descricao = document.getElementById("descricao").value;
-    const preco = parseFloat(document.getElementById("preco").value);
-    // define 1 para novos produtos, para existentes usa o valor do checkbox
-    const ativo = id ? (document.getElementById("ativo").checked ? 1 : 0) : 1;
-
-    const produto = { id, titulo, descricao, preco, ativo };
-
-    const url = id
-        ? `http://localhost:8090/produtos/atualizarProduto`
-        //posso simplificar e tirar esse atualizar e aí posso definir o id como null e o ativo como 1 
-        //aqui verifica se for colocado um id já existente vai ser um put e se for com um id null vai ser post
-        : `http://localhost:8090/produtos/salvarProduto`;
-    const method = id ? "PUT" : "POST";
-
-    try {
-        const response = await fetch(url, {
-            method,
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(produto),
+            produtosUl.appendChild(row);
         });
-
-        if (response.ok) {
-            alert("Produto salvo com sucesso!");
-            carregarProdutos();
-            document.getElementById("produto-form").reset();
-        } else {
-            alert("Erro ao salvar produto. Verifique os dados e tente novamente.");
-        }
-    } catch (error) {
-        console.error("Erro na requisição:", error);
-        alert("Erro ao salvar produto. Verifique a conexão com o servidor.");
     }
-}
+    async function salvarProduto(event) {
+        event.preventDefault(); 
 
-// Função para carregar os dados de um produto no formulário para edição
-// não implementei a edição, falta de tempo!, não tem esse endpoint no controller
+        const produto = {
+            titulo: document.getElementById("titulo").value,
+            descricao: document.getElementById("descricao").value,
+            preco: parseFloat(document.getElementById("preco").value),
+            ativo: 1, 
+        };
 
-async function editarProduto(id) {
-    const response = await fetch(`http://localhost:8090/produtos/obterProduto?id=${id}`);
-    const produto = await response.json();
-
-    document.getElementById("produto-id").value = produto.id;
-    document.getElementById("titulo").value = produto.titulo;
-    document.getElementById("descricao").value = produto.descricao;
-    document.getElementById("preco").value = produto.preco;
-    document.getElementById("ativo").checked = produto.ativo === 1;
-}
-
-// Função para excluir um produto
-async function excluirProduto(id) {
-    if (confirm("Tem certeza que deseja excluir este produto?")) {
         try {
-            const response = await fetch(`http://localhost:8090/produtos/deletarProduto?produtoId=${id}`, {
-                method: "DELETE",
+            const response = await fetch("http://localhost:8090/produtos/salvarProduto", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(produto),
             });
 
             if (response.ok) {
-                alert("Produto excluído com sucesso!");
+                alert("Produto salvo com sucesso!");
                 carregarProdutos();
+                document.getElementById("produto-form").reset();
             } else {
-                alert("Erro ao excluir o produto.");
+                alert("Erro ao salvar produto. Verifique os dados e tente novamente.");
             }
         } catch (error) {
             console.error("Erro na requisição:", error);
-            alert("Erro ao excluir produto. Verifique a conexão com o servidor.");
+            alert("Erro ao salvar produto. Verifique a conexão com o servidor.");
         }
     }
-}
+
+    // Função para carregar os dados de um produto no formulário para edição
+
+    async function editarProduto(id) {
+        const response = await fetch(`http://localhost:8090/produtos/obterProduto?id=${id}`);
+        const produto = await response.json();
+
+        document.getElementById("produto-id").value = produto.id;
+        document.getElementById("titulo").value = produto.titulo;
+        document.getElementById("descricao").value = produto.descricao;
+        document.getElementById("preco").value = produto.preco;
+        document.getElementById("ativo").checked = produto.ativo === 1;
+    }
+
+
+    // Função para excluir um produto
+    async function excluirProduto(id) {
+        if (confirm("Tem certeza que deseja excluir este produto?")) {
+            try {
+                const response = await fetch(`http://localhost:8090/produtos/deletarProduto?produtoId=${id}`, {
+                    method: "DELETE",
+                });
+
+                if (response.ok) {
+                    alert("Produto excluído com sucesso!");
+                    carregarProdutos();
+                } else {
+                    alert("Erro ao excluir o produto.");
+                }
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                alert("Erro ao excluir produto. Verifique a conexão com o servidor.");
+            }
+        }
+    }
 
     document.getElementById("produto-form").addEventListener("submit", salvarProduto);
     carregarProdutos();
@@ -150,9 +135,9 @@ async function carregarClientes() {
         clientesUl.innerHTML = "";
 
         usuarios
-        // tira os outros administradores com o filtro
-        // só listar id do usuário e cliente, nome email ativo data celular e os produtos
-            .filter(usuario => usuario.grupo === "Cliente") 
+            // tira os outros administradores com o filtro
+            // só listar id do usuário e cliente, nome email ativo data celular e os produtos
+            .filter(usuario => usuario.grupo === "Cliente")
             .forEach(usuario => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -213,18 +198,18 @@ async function carregarPerfil() {
             document.getElementById("admin-senha").value = usuario.senha;
             document.getElementById("admin-ativo").value = usuario.ativo;
 
-             const sexo = usuario.sexo === 'M' ? 'Masculino' : 'Feminino';
-             document.getElementById("admin-sexo").value = sexo;
- 
+            const sexo = usuario.sexo === 'M' ? 'Masculino' : 'Feminino';
+            document.getElementById("admin-sexo").value = sexo;
+
             document.getElementById("admin-ativo").value = usuario.ativo === 1 ? "Ativo" : "Inativo";
 
- 
-             document.getElementById("admin-grupo").value = usuario.grupo;
-         } else if (response.status === 404) {
-             alert("Usuário não encontrado.");
-         } else {
-             alert("Erro ao carregar perfil.");
-         }
+
+            document.getElementById("admin-grupo").value = usuario.grupo;
+        } else if (response.status === 404) {
+            alert("Usuário não encontrado.");
+        } else {
+            alert("Erro ao carregar perfil.");
+        }
     } catch (error) {
         console.error("Erro ao carregar perfil:", error);
         alert("Erro ao carregar perfil. Verifique a conexão com o servidor.");

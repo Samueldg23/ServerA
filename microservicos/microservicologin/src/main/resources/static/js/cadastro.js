@@ -82,7 +82,7 @@ function criarCliente(idUsuario) {
     })
     .then(() => {
         alert("Conta de cliente criada com sucesso!");
-        window.location.href = "/"; //tela de login
+        window.location.href = "/"; 
     })
     .catch(error => {
         console.error("Erro:", error);
